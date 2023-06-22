@@ -1,4 +1,5 @@
 // #![windows_subsystem = "windows"]
+mod color_picker;
 mod keybinds;
 mod main_window;
 

@@ -1,8 +1,6 @@
-use std::{thread::sleep, time};
+use winsafe::{gui, prelude::*};
 
-use winsafe::{gui, prelude::*, GetCursorPos, POINT};
-
-use crate::keybinds;
+use crate::color_picker::color_picker_loop;
 
 #[derive(Clone)]
 pub struct ColorPicker {
@@ -38,32 +36,9 @@ impl ColorPicker {
     pub fn attach_key_events(&self) {
         let window = self.window.clone();
 
-        window.spawn_new_thread({
-            // let window = window.clone();
-            let mut pick_mode = false;
-            let mut cursor_position: Option<POINT> = None;
-            move || loop {
-                println!(
-                    "{} {}",
-                    pick_mode,
-                    if let Some(pos) = cursor_position {
-                        pos
-                    } else {
-                        POINT {
-                            ..Default::default()
-                        }
-                    }
-                );
-
-                if keybinds::color_pick_pressed() && !pick_mode {
-                    pick_mode = true;
-                } else if keybinds::mouse_pressed() && pick_mode {
-                    cursor_position = Some(GetCursorPos()?);
-                    pick_mode = false;
-                };
-
-                sleep(time::Duration::from_millis(200));
-            }
+        window.spawn_new_thread(move || {
+            color_picker_loop();
+            Ok(())
         });
     }
     pub fn change_title(&self, new_title: String) {

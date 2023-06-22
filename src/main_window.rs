@@ -1,6 +1,6 @@
 use std::{thread::sleep, time};
 
-use winsafe::{co, gui, prelude::*, GetCursorPos, POINT};
+use winsafe::{gui, prelude::*, GetCursorPos, POINT};
 
 use crate::keybinds;
 
@@ -65,16 +65,6 @@ impl ColorPicker {
                 sleep(time::Duration::from_millis(200));
             }
         });
-
-        // window.spawn_new_thread(move || {
-        //     loop {
-        //         if keybinds::color_pick_pressed() {
-        //             window.clone();
-        //             // hwnd.lock();
-        //             println!("pressed");
-        //         };
-        //     }
-        // });
     }
     pub fn change_title(&self, new_title: String) {
         let window = self.window.clone();

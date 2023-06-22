@@ -1,11 +1,17 @@
-use winsafe::{gui, prelude::*};
+use std::sync::{Arc, Mutex};
 
-use crate::color_picker::color_picker_loop;
+use winsafe::{
+    gui::{self, WindowMain},
+    prelude::*,
+};
+
+use crate::color_picker::ColorPickerLoop;
 
 #[derive(Clone)]
 pub struct ColorPicker {
     pub window: gui::WindowMain,
     pub btn_color_pick: gui::Button,
+    pub pick_mode: Arc<Mutex<bool>>,
 }
 
 impl ColorPicker {
@@ -21,9 +27,12 @@ impl ColorPicker {
                 ..Default::default()
             },
         );
+        let is_looping = Arc::new(Mutex::new(false));
+        let pick_mode = Arc::new(Mutex::new(false));
         let color_picker = Self {
             window,
             btn_color_pick,
+            pick_mode,
         };
 
         color_picker.attach_btn_events();
@@ -31,20 +40,28 @@ impl ColorPicker {
         color_picker
     }
     pub fn attach_btn_events(&self) {
-        self.change_title(String::from("Picking Color"));
+        let pick_mode = Arc::clone(&self.pick_mode);
+        self.btn_color_pick.on().bn_clicked(move || {
+            //
+            // change_title(window.clone(), String::from("Picking Color"));
+            println!("getting lock");
+            let mut pick_mode = pick_mode.lock().unwrap();
+            println!("{}", *pick_mode);
+            *pick_mode = true;
+            Ok(())
+        });
     }
     pub fn attach_key_events(&self) {
         let window = self.window.clone();
+        let pick_mode = Arc::clone(&self.pick_mode);
         window.spawn_new_thread(move || {
-            color_picker_loop();
+            let mut color_picker_loop = ColorPickerLoop::new(Some(pick_mode));
+            color_picker_loop.color_picker_loop();
             Ok(())
         });
     }
-    pub fn change_title(&self, new_title: String) {
-        let window = self.window.clone();
-        self.btn_color_pick.on().bn_clicked(move || {
-            window.hwnd().SetWindowText(&new_title)?;
-            Ok(())
-        });
-    }
+}
+pub fn change_title(window: WindowMain, new_title: String) {
+    let window = window.clone();
+    window.hwnd().SetWindowText(&new_title);
 }

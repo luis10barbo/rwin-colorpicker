@@ -1,7 +1,9 @@
 // #![windows_subsystem = "windows"]
+mod clipboard;
 mod color_picker;
 mod keybinds;
 mod main_window;
+mod notification;
 
 use main_window::ColorPicker;
 use winsafe::co;

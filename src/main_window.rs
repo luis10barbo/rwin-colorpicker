@@ -35,7 +35,6 @@ impl ColorPicker {
     }
     pub fn attach_key_events(&self) {
         let window = self.window.clone();
-
         window.spawn_new_thread(move || {
             color_picker_loop();
             Ok(())

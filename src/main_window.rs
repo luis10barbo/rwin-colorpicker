@@ -44,9 +44,9 @@ impl ColorPicker {
         self.btn_color_pick.on().bn_clicked(move || {
             //
             // change_title(window.clone(), String::from("Picking Color"));
-            println!("getting lock");
+            println!("color pick button, getting pick_mode lock");
             let mut pick_mode = pick_mode.lock().unwrap();
-            println!("{}", *pick_mode);
+            println!("got pick_mode");
             *pick_mode = true;
             Ok(())
         });

@@ -1,4 +1,8 @@
-use std::sync::{Arc, Mutex};
+use std::{
+    sync::{Arc, Mutex},
+    thread::sleep,
+    time,
+};
 
 use winsafe::{
     gui::{self, WindowMain},
@@ -44,6 +48,7 @@ impl ColorPicker {
         self.btn_color_pick.on().bn_clicked(move || {
             //
             // change_title(window.clone(), String::from("Picking Color"));
+            sleep(time::Duration::from_millis(200));
             println!("color pick button, getting pick_mode lock");
             let mut pick_mode = pick_mode.lock().unwrap();
             println!("got pick_mode");
@@ -59,6 +64,11 @@ impl ColorPicker {
             color_picker_loop.color_picker_loop();
             Ok(())
         });
+        window.on().wm_key_down(move |key| {
+            //
+            println!("key down: {:?}", key.vkey_code);
+            Ok(())
+        })
     }
 }
 pub fn change_title(window: WindowMain, new_title: String) {

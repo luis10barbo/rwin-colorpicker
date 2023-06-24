@@ -84,7 +84,7 @@ impl ColorPickerLoop {
                 if keybinds::color_pick_pressed() && !*pick_mode {
                     // create_picker_notification("Enabled color picker mode");
 
-                    loop_delay = 25;
+                    loop_delay = 10;
                     *pick_mode = true;
                 } else if keybinds::mouse_pressed() && *pick_mode {
                     cursor_position = Some(GetCursorPos().unwrap_or_default());

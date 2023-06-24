@@ -41,7 +41,7 @@ impl ColorPickerLoop {
                 let capture_result = screen.capture_area(current_width as i32, position.y, 1, 1);
 
                 if capture_result.is_err() {
-                    create_picker_notification("Error creating notification");
+                    create_picker_notification("Error capturing area");
                     break;
                 };
 
